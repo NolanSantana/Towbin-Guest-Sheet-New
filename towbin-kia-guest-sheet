@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Towbin Kia — Guest Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #0f0f0f; --mid: #5a5a5a; --muted: #999; --rule: #e0ddd8;
+  --accent: #bb0a1e; --accent-light: #fdf0f1; --bg: #f9f7f4; --white: #fff; --radius: 14px;
+}
+html, body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-tap-highlight-color: transparent; }
+
+/* LANDING */
+#landing { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 24px; text-align: center; background: var(--white); }
+.landing-brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
+.landing-brand .towbin-kia-text { font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink); font-family: 'DM Sans', sans-serif; }
+#landing h1 { font-family: 'Playfair Display', serif; font-size: 30px; margin-bottom: 4px; }
+#landing .sub { font-size: 11px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+#landing .loc { font-size: 11px; color: var(--mid); margin-bottom: 36px; }
+.btn-start { padding: 18px 40px; background: var(--ink); color: white; border: none; border-radius: 14px; font-size: 17px; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer; }
+
+/* FORM */
+#form-screen { display: none; }
+.topbar { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 2px solid var(--ink); padding: 12px 20px 0; }
+.topbar-inner { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.brand { display: flex; flex-direction: column; }
+.brand-header { display: flex; align-items: center; gap: 7px; }
+.brand-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink); }
+.brand-sub { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
+.step-counter { font-size: 11px; color: var(--muted); text-align: right; }
+.step-counter strong { font-size: 18px; color: var(--ink); font-weight: 700; }
+.progress-track { height: 3px; background: var(--rule); margin: 0 -20px; }
+.progress-fill { height: 100%; background: var(--accent); transition: width 0.4s cubic-bezier(0.4,0,0.2,1); }
+
+.main { padding: 24px 20px 120px; max-width: 540px; margin: 0 auto; }
+.step-panel { display: none; animation: fadeUp 0.3s ease; }
+.step-panel.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.step-eyebrow { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 5px; }
+.step-heading { font-family: 'Playfair Display', serif; font-size: 24px; line-height: 1.2; margin-bottom: 5px; }
+.step-desc { font-size: 13px; color: var(--mid); margin-bottom: 24px; line-height: 1.5; }
+
+/* FIELDS */
+.field { margin-bottom: 18px; }
+.field-label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 600; margin-bottom: 7px; }
+.field input[type="text"],
+.field input[type="tel"],
+.field input[type="email"],
+.field input[type="number"],
+.field textarea {
+  width: 100%; background: var(--white); border: 1.5px solid var(--rule); border-radius: 10px;
+  padding: 14px 16px; font-size: 16px; font-family: 'DM Sans', sans-serif; color: var(--ink);
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s; -webkit-appearance: none;
+}
+.field input:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(187,10,30,0.10); }
+.field textarea { resize: none; line-height: 1.5; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+/* PILLS */
+.pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill-btn {
+  display: flex; align-items: center; gap: 7px; padding: 11px 14px;
+  border: 1.5px solid var(--rule); border-radius: 10px; background: var(--white);
+  font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink);
+  cursor: pointer; transition: all 0.15s; user-select: none; flex: 1 1 calc(50% - 4px);
+}
+.pill-btn.wide { flex: 1 1 100%; }
+.pill-btn.auto { flex: 0 0 auto; }
+.pill-icon { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--rule); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.pill-btn.check .pill-icon { border-radius: 4px; }
+.pill-btn.selected { border-color: var(--accent); background: var(--accent-light); }
+.pill-btn.selected .pill-icon { background: var(--accent); border-color: var(--accent); }
+.pill-btn.selected .pill-icon::after { content: '✓'; font-size: 10px; color: white; font-weight: bold; }
+.pill-btn:active { transform: scale(0.98); }
+.pill-label { flex: 1; line-height: 1.3; }
+
+/* CREDIT SCALE */
+.credit-scale { display: grid; grid-template-columns: repeat(6,1fr); gap: 8px; }
+.credit-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 12px 4px; border: 1.5px solid var(--rule); border-radius: 10px;
+  background: var(--white); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif;
+}
+.credit-btn .grade { font-size: 20px; font-weight: 700; color: var(--ink); }
+.credit-btn .score { font-size: 9px; color: var(--muted); }
+.credit-btn.selected { border-color: var(--accent); background: var(--accent-light); }
+.credit-btn.selected .grade { color: var(--accent); }
+.credit-btn:active { transform: scale(0.97); }
+
+.trade-reveal { display: none; }
+.trade-reveal.show { display: block; }
+.card { background: var(--white); border: 1.5px solid var(--rule); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+.card-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--mid); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--rule); }
+
+/* BOTTOM NAV */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); border-top: 1px solid var(--rule); padding: 14px 20px calc(14px + env(safe-area-inset-bottom)); display: flex; gap: 10px; max-width: 540px; margin: 0 auto; }
+@media (min-width:540px) { .bottom-nav { left:50%; transform:translateX(-50%); width:540px; } }
+.btn { flex:1; padding:16px; border-radius:12px; font-size:15px; font-family:'DM Sans',sans-serif; font-weight:500; border:none; cursor:pointer; transition:all 0.15s; }
+.btn-back { background:var(--bg); color:var(--mid); border:1.5px solid var(--rule); flex:0 0 80px; }
+.btn-next { background:var(--ink); color:white; }
+.btn-submit { background:var(--accent); color:white; }
+.btn:active { transform:scale(0.97); }
+
+/* SUCCESS */
+.success-screen { display:none; text-align:center; padding:48px 20px 60px; animation:fadeUp 0.4s ease; }
+.success-screen.show { display:block; }
+.success-icon { width:72px; height:72px; background:#fdf0f1; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 20px; }
+.success-screen h2 { font-family:'Playfair Display',serif; font-size:26px; margin-bottom:8px; }
+.success-screen > p { font-size:13px; color:var(--mid); line-height:1.6; margin-bottom:24px; }
+
+.summary-card { background:var(--white); border:1px solid var(--rule); border-radius:var(--radius); padding:20px; margin:0 auto 20px; max-width:420px; text-align:left; }
+.sum-sec { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--accent); margin:14px 0 8px; padding-top:14px; border-top:1px solid var(--rule); }
+.sum-sec:first-child { margin-top:0; padding-top:0; border-top:none; }
+.sum-row { display:flex; justify-content:space-between; align-items:baseline; padding:6px 0; border-bottom:1px solid var(--rule); font-size:13px; }
+.sum-row:last-child { border-bottom:none; }
+.s-label { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.8px; flex-shrink:0; margin-right:12px; }
+.s-val { font-weight:500; text-align:right; }
+
+.sp-card { background:var(--accent-light); border:1.5px solid var(--accent); border-radius:var(--radius); padding:18px; margin:0 auto 20px; max-width:420px; text-align:left; }
+.sp-card .card-title { color:var(--accent); border-color:rgba(187,10,30,0.2); }
+.sp-card input, .sp-card textarea { width:100%; background:var(--white); border:1.5px solid var(--rule); border-radius:10px; padding:12px 14px; font-size:15px; font-family:'DM Sans',sans-serif; color:var(--ink); outline:none; margin-bottom:12px; -webkit-appearance:none; }
+.sp-card textarea { resize:none; }
+.sp-card .field-label { display:block; font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-weight:600; margin-bottom:6px; }
+
+.action-btns { display:flex; flex-direction:column; gap:10px; max-width:420px; margin:0 auto; }
+.btn-pdf { width:100%; padding:18px; border-radius:12px; font-size:16px; font-weight:500; font-family:'DM Sans',sans-serif; border:none; cursor:pointer; background:var(--ink); color:white; transition:all 0.15s; }
+.btn-pdf:active { transform:scale(0.98); }
+.btn-pdf.loading { opacity:0.6; pointer-events:none; }
+.btn-new { width:100%; padding:14px; border-radius:12px; font-size:14px; font-family:'DM Sans',sans-serif; color:var(--mid); background:transparent; border:1.5px solid var(--rule); cursor:pointer; }
+.pdf-status { font-size:12px; color:var(--mid); text-align:center; min-height:18px; margin-top:4px; }
+.consent-box { padding:14px 16px; background:var(--accent-light); border-radius:10px; border-left:3px solid var(--accent); margin-top:4px; }
+.consent-box p { font-size:11px; color:var(--mid); line-height:1.6; }
+.tagline-box { margin-top:20px; padding:14px 16px; border:1.5px solid var(--ink); border-radius:10px; text-align:center; }
+.tagline-box p { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- ══ LANDING ══ -->
+<div id="landing">
+  <div class="landing-brand">
+    <span class="towbin-kia-text">Towbin Kia</span>
+  </div>
+  <h1>Guest Sheet</h1>
+  <div class="sub">Henderson, NV</div>
+  <div class="loc">275 Auto Mall Drive · (725) 242-4343</div>
+  <button class="btn-start" onclick="startForm()">📋 &nbsp;Begin Guest Sheet</button>
+</div>
+
+<!-- ══ FORM ══ -->
+<div id="form-screen">
+  <div class="topbar" id="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-header">
+          <div class="brand-name">Towbin Kia</div>
+        </div>
+        <div class="brand-sub">Guest Information Sheet</div>
+      </div>
+      <div class="step-counter"><strong id="step-num">1</strong> <span>of 4</span></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:25%"></div></div>
+  </div>
+
+  <div class="main">
+
+    <!-- STEP 1: CONTACT -->
+    <div class="step-panel active" id="step-1">
+      <div class="step-eyebrow">Step 1 of 4</div>
+      <h2 class="step-heading">Contact Info</h2>
+      <p class="step-desc">Let's start with your basic information.</p>
+
+      <div class="field-row">
+        <div class="field"><label class="field-label">First Name</label><input type="text" id="fname" placeholder="Jane" autocomplete="given-name"></div>
+        <div class="field"><label class="field-label">Last Name</label><input type="text" id="lname" placeholder="Smith" autocomplete="family-name"></div>
+      </div>
+      <div class="field"><label class="field-label">Address</label><input type="text" id="address" placeholder="123 Main St, Las Vegas, NV 89101" autocomplete="street-address"></div>
+      <div class="field-row">
+        <div class="field"><label class="field-label">Home Phone</label><input type="tel" id="home-phone" placeholder="(702) 000-0000"></div>
+        <div class="field"><label class="field-label">Cell / Work</label><input type="tel" id="cell-phone" placeholder="(702) 000-0000" autocomplete="tel"></div>
+      </div>
+      <div class="field"><label class="field-label">Email Address</label><input type="email" id="email" placeholder="jane@email.com" autocomplete="email"></div>
+      <div class="field">
+        <label class="field-label">How Did You Hear About Us?</label>
+        <div class="pill-group">
+          <button class="pill-btn check" data-group="source" data-val="Internet / Google">🔍 <span class="pill-label">Internet / Google</span></button>
+          <button class="pill-btn check" data-group="source" data-val="Social Media">📲 <span class="pill-label">Social Media</span></button>
+          <button class="pill-btn check" data-group="source" data-val="TV / Radio">📺 <span class="pill-label">TV / Radio</span></button>
+          <button class="pill-btn check" data-group="source" data-val="Magazine / Mailer">📰 <span class="pill-label">Magazine / Mailer</span></button>
+          <button class="pill-btn check" data-group="source" data-val="Friend / Family">👥 <span class="pill-label">Friend / Family</span></button>
+          <button class="pill-btn check" data-group="source" data-val="Returning Customer">⭐ <span class="pill-label">Returning Customer</span></button>
+          <button class="pill-btn check" data-group="source" data-val="Drive By">🚗 <span class="pill-label">Drive By</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: VEHICLE OF INTEREST -->
+    <div class="step-panel" id="step-2">
+      <div class="step-eyebrow">Step 2 of 4</div>
+      <h2 class="step-heading">Vehicle of Interest</h2>
+      <p class="step-desc">Tell us about the vehicle you're looking for.</p>
+
+      <div class="field">
+        <label class="field-label">New or Pre-Owned?</label>
+        <div class="pill-group">
+          <button class="pill-btn" data-group="new_used" data-single="true" data-val="New"><span class="pill-icon"></span>New</button>
+          <button class="pill-btn" data-group="new_used" data-single="true" data-val="Pre-Owned"><span class="pill-icon"></span>Pre-Owned</button>
+          <button class="pill-btn" data-group="new_used" data-single="true" data-val="Open to Either"><span class="pill-icon"></span>Open to Either</button>
+        </div>
+      </div>
+
+      <div class="field-row-3">
+        <div class="field"><label class="field-label">Year</label><input type="text" id="veh-year" placeholder="2025" inputmode="numeric" maxlength="4"></div>
+        <div class="field"><label class="field-label">Make</label><input type="text" id="veh-make" placeholder="Kia"></div>
+        <div class="field"><label class="field-label">Model</label><input type="text" id="veh-model" placeholder="Telluride"></div>
+      </div>
+
+      <div class="field-row">
+        <div class="field"><label class="field-label">Stock # (if known)</label><input type="text" id="stock-num" placeholder="Optional"></div>
+        <div class="field"><label class="field-label">Color Preference</label><input type="text" id="veh-color" placeholder="White, Black…"></div>
+      </div>
+
+      <div class="field-row">
+        <div class="field"><label class="field-label">Down Payment $</label><input type="text" id="down" placeholder="$0" inputmode="numeric"></div>
+        <div class="field"><label class="field-label">Desired Monthly $</label><input type="text" id="monthly" placeholder="$500" inputmode="numeric"></div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Needs / Wants</label>
+        <textarea id="needs" rows="4" placeholder="e.g. need 3rd row, towing package, great fuel economy, AWD, specific features…"></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 3: TRADE-IN -->
+    <div class="step-panel" id="step-3">
+      <div class="step-eyebrow">Step 3 of 4</div>
+      <h2 class="step-heading">Trade-In Information</h2>
+      <p class="step-desc">Do you have a vehicle to trade in today?</p>
+
+      <div class="field">
+        <div class="pill-group">
+          <button class="pill-btn wide" data-group="has_trade" data-single="true" data-val="Yes" id="trade-yes-btn"><span class="pill-icon"></span>Yes, I have a trade-in</button>
+          <button class="pill-btn" data-group="has_trade" data-single="true" data-val="No"><span class="pill-icon"></span>No trade-in</button>
+          <button class="pill-btn" data-group="has_trade" data-single="true" data-val="Not Sure"><span class="pill-icon"></span>Not sure yet</button>
+        </div>
+      </div>
+
+      <div class="trade-reveal" id="trade-fields">
+        <div class="card">
+          <div class="card-title">Trade-In Details</div>
+          <div class="field-row-3" style="margin-bottom:14px;">
+            <div class="field" style="margin-bottom:0;"><label class="field-label">Year</label><input type="text" id="t-year" placeholder="2020" inputmode="numeric"></div>
+            <div class="field" style="margin-bottom:0;"><label class="field-label">Make</label><input type="text" id="t-make" placeholder="Ford"></div>
+            <div class="field" style="margin-bottom:0;"><label class="field-label">Model</label><input type="text" id="t-model" placeholder="Explorer"></div>
+          </div>
+          <div class="field-row" style="margin-bottom:14px;">
+            <div class="field" style="margin-bottom:0;"><label class="field-label">Mileage</label><input type="text" id="t-miles" placeholder="45,000" inputmode="numeric"></div>
+            <div class="field" style="margin-bottom:0;">
+              <label class="field-label">Condition</label>
+              <div class="pill-group" style="margin-top:2px;">
+                <button class="pill-btn" style="flex:1;" data-group="trade_cond" data-single="true" data-val="Excellent"><span class="pill-icon"></span>Excellent</button>
+                <button class="pill-btn" style="flex:1;" data-group="trade_cond" data-single="true" data-val="Good"><span class="pill-icon"></span>Good</button>
+                <button class="pill-btn" style="flex:1;" data-group="trade_cond" data-single="true" data-val="Fair"><span class="pill-icon"></span>Fair</button>
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field" style="margin-bottom:0;"><label class="field-label">Current Payment $</label><input type="text" id="t-payment" placeholder="$0" inputmode="numeric"></div>
+            <div class="field" style="margin-bottom:0;"><label class="field-label">Lienholder / Payoff $</label><input type="text" id="t-payoff" placeholder="$0" inputmode="numeric"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: CREDIT -->
+    <div class="step-panel" id="step-4">
+      <div class="step-eyebrow">Step 4 of 4</div>
+      <h2 class="step-heading">Credit &amp; Final Details</h2>
+      <p class="step-desc">This helps us find you the best financing options.</p>
+
+      <div class="field">
+        <label class="field-label">Credit Score Estimate</label>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:10px; line-height:1.5;">
+          Based on our scale: <strong>$25 per $1,000 borrowed</strong> from the bank
+        </div>
+        <div class="credit-scale" id="credit-scale">
+          <button class="credit-btn" data-val="A (800+)"><span class="grade">A</span><span class="score">800+</span></button>
+          <button class="credit-btn" data-val="B (700s)"><span class="grade">B</span><span class="score">700s</span></button>
+          <button class="credit-btn" data-val="C (600s)"><span class="grade">C</span><span class="score">600s</span></button>
+          <button class="credit-btn" data-val="D (500s)"><span class="grade">D</span><span class="score">500s</span></button>
+          <button class="credit-btn" data-val="E (400s)"><span class="grade">E</span><span class="score">400s</span></button>
+          <button class="credit-btn" data-val="F (300s)"><span class="grade">F</span><span class="score">300s</span></button>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:8px;"></div>
+
+      <div style="margin-top:24px; margin-bottom:20px; background:white; border:2px solid var(--ink); border-radius:12px; padding:20px;">
+        <p style="color:var(--ink); font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; text-align:center; margin-bottom:16px;">If all terms are agreeable, we can earn your business now.</p>
+        <div style="display:flex; gap:12px;">
+          <button class="pill-btn" style="flex:1; justify-content:center; font-size:15px; font-weight:600; padding:14px;" data-group="do_business" data-single="true" data-val="Yes">
+            <span class="pill-icon"></span> ✓ &nbsp;Yes
+          </button>
+          <button class="pill-btn" style="flex:1; justify-content:center; font-size:15px; font-weight:600; padding:14px;" data-group="do_business" data-single="true" data-val="No">
+            <span class="pill-icon"></span> ✗ &nbsp;No
+          </button>
+        </div>
+      </div>
+
+      <div class="consent-box">
+        <p>By submitting, you consent to being contacted by Towbin Kia via phone, email, or text. Your information is kept strictly confidential and will never be sold or shared.</p>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="success-screen">
+      <div class="success-icon">✓</div>
+      <h2>You're all set!</h2>
+      <p>Welcome to Towbin Kia! Your information has been shared with our team and we'll be right with you.</p>
+      <div class="summary-card" id="summary-card"></div>
+      <div class="sp-card">
+        <div class="card-title">For Salesperson Use</div>
+        <label class="field-label">Salesperson Name</label>
+        <input type="text" id="sp-name" placeholder="Your name">
+        <label class="field-label">Stock # Shown / Notes</label>
+        <textarea id="sp-notes" rows="3" placeholder="Stock # shown, first impression, customer priorities…"></textarea>
+      </div>
+      <div class="action-btns">
+        <button class="btn-pdf" id="pdf-btn" onclick="savePDF()">📄 &nbsp;Save Guest Sheet as PDF</button>
+        <div class="pdf-status" id="pdf-status"></div>
+        <button class="btn-new" onclick="location.reload()">Start New Guest Sheet</button>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <div class="bottom-nav" id="bottom-nav">
+    <button class="btn btn-back" id="btn-back" style="display:none;" onclick="prevStep()">← Back</button>
+    <button class="btn btn-next" id="btn-next" onclick="nextStep()">Continue →</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   PURE JS PDF ENGINE — zero dependencies
+══════════════════════════════════════════ */
+const PDF = {
+  PW:612, PH:792, ML:44, MR:44, MT:44, MB:44,
+  CW_MAP:{"a":556,"b":556,"c":500,"d":556,"e":556,"f":278,"g":556,"h":556,"i":222,"j":222,"k":500,"l":222,"m":833,"n":556,"o":556,"p":556,"q":556,"r":333,"s":500,"t":278,"u":556,"v":500,"w":722,"x":500,"y":500,"z":500,"A":667,"B":667,"C":722,"D":722,"E":667,"F":611,"G":778,"H":722,"I":278,"J":500,"K":667,"L":611,"M":833,"N":722,"O":778,"P":667,"Q":778,"R":722,"S":667,"T":611,"U":722,"V":667,"W":944,"X":667,"Y":667,"Z":611,"0":556,"1":556,"2":556,"3":556,"4":556,"5":556,"6":556,"7":556,"8":556,"9":556," ":278,".":278,",":278,":":278,";":278,"!":278,"?":556,"-":333,"$":556,"(":333,")":333,"/":278,"&":667,"@":1015,"#":556,"'":222},
+  tw(s,sz,bold){return[...String(s)].reduce((a,c)=>a+(this.CW_MAP[c]||500),0)/1000*sz*(bold?1.08:1);},
+  wrap(s,maxW,sz,bold){const words=String(s).split(' ');const lines=[];let cur='';for(const w of words){const t=cur?cur+' '+w:w;if(this.tw(t,sz,bold)<=maxW){cur=t;}else{if(cur)lines.push(cur);cur=w;}}if(cur)lines.push(cur);return lines.length?lines:[''];},
+  esc(s){return String(s||'').replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)').replace(/\r?\n/g,' ');},
+
+  generate(data) {
+    const pages=[];let ops=[];
+    const PW=this.PW,PH=this.PH,ML=this.ML,MR=this.MR,MB=this.MB,MT=this.MT;
+    const CW=PW-ML-MR;
+    let y=PH-MT;
+    const me=this;
+
+    const RED   ='0.733 0.039 0.118';
+    const INK   ='0.059 0.059 0.059';
+    const MID   ='0.353 0.353 0.353';
+    const MUTED ='0.600 0.600 0.600';
+    const BGROW ='0.976 0.969 0.957';
+    const WHITE ='1.000 1.000 1.000';
+    const REDLT ='0.992 0.941 0.945';
+    const RULE  ='0.878 0.867 0.847';
+
+    function newPage(){if(ops.length)pages.push([...ops]);ops=[];y=PH-MT;}
+    function need(h){if(y-h<MB+10){newPage();return true;}return false;}
+    function rect(x,yr,w,h,c){ops.push(`${c} rg`);ops.push(`${x.toFixed(1)} ${yr.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)} re f`);}
+    function hline(x1,yr,x2,lw,c){ops.push(`${c} RG`);ops.push(`${lw} w`);ops.push(`${x1.toFixed(1)} ${yr.toFixed(1)} m ${x2.toFixed(1)} ${yr.toFixed(1)} l S`);}
+    function txt(x,yr,s,f,sz,c){ops.push(`${c} rg`);ops.push(`BT /${f} ${sz} Tf ${x.toFixed(1)} ${yr.toFixed(1)} Td (${me.esc(s)}) Tj ET`);}
+    function txtR(x,yr,s,f,sz,c){txt(x-me.tw(s,sz,f==='F2'),yr,s,f,sz,c);}
+    function txtC(cx,yr,s,f,sz,c){txt(cx-me.tw(s,sz,f==='F2')/2,yr,s,f,sz,c);}
+
+    const d=data;
+    const dateStr=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    const guestName=[d.fname,d.lname].filter(Boolean).join(' ')||'Guest';
+    const spName=d.sp_name||'—';
+    const spNotes=d.sp_notes||'—';
+
+    // ── RED TOP BAR ──
+    rect(0,PH-6,PW,6,RED);
+    y=PH-6-20;
+
+    // ── KIA HEADER ──
+    txt(ML,y,'KIA  TOWBIN KIA','F2',16,INK);
+    y-=13;
+    txt(ML,y,'GUEST SHEET','F2',11,RED);
+
+    // Right meta
+    let my=PH-6-20;
+    for(const [l,v] of [['Date:',dateStr],['Salesperson:',spName],['Guest:',guestName]]){
+      txtR(PW-MR,my,`${l}  ${v}`,'F1',8.5,MID);
+      my-=12;
+    }
+
+    y-=10;
+    hline(ML,y,PW-MR,1.5,INK);
+    y-=14;
+
+    const LW=CW*0.36, VW=CW*0.64;
+
+    function section(title,rows){
+      const valid=rows.filter(([,v])=>v);
+      if(!valid.length)return;
+      const est=14+valid.reduce((a,[,v])=>a+me.wrap(v,VW-10,11).length*13+6,0);
+      need(est);
+      rect(ML,y-10,CW,14,INK);
+      txt(ML+7,y-7,title.toUpperCase(),'F2',7.5,WHITE);
+      y-=17;
+      valid.forEach(([label,val],i)=>{
+        const wrapped=me.wrap(val,VW-10,11);
+        const rh=Math.max(17,wrapped.length*13+5);
+        need(rh+2);
+        rect(ML,y-rh+4,CW,rh,i%2===0?WHITE:BGROW);
+        txt(ML+6,y-3,label.toUpperCase(),'F1',7.5,MUTED);
+        wrapped.forEach((line,li)=>txt(ML+LW,y-3-li*13,line,'F1',11,INK));
+        hline(ML,y-rh+4,ML+CW,0.4,RULE);
+        y-=rh;
+      });
+      y-=12;
+    }
+
+    function gv(k){const v=d[k];return Array.isArray(v)&&v.length?v[0]:(v||null);}
+    function jv(k){const v=d[k];return Array.isArray(v)&&v.length?v.join(', '):null;}
+
+    section('Contact Information',[
+      ['Name',guestName],
+      ['Address',d.address],
+      ['Home Phone',d.home_phone],
+      ['Cell / Work',d.cell_phone],
+      ['Email',d.email],
+      ['How They Heard',jv('source')],
+    ]);
+
+    section('Vehicle of Interest',[
+      ['New or Pre-Owned',gv('new_used')],
+      ['Year / Make / Model',[d.veh_year,d.veh_make,d.veh_model].filter(Boolean).join(' ')||null],
+      ['Stock #',d.stock_num],
+      ['Color Preference',d.veh_color],
+      ['Down Payment',d.down?'$'+d.down:null],
+      ['Desired Monthly Payment',d.monthly?'$'+d.monthly:null],
+      ['Needs / Wants',d.needs],
+    ]);
+
+    section('Trade-In Information',[
+      ['Has Trade-In',gv('has_trade')],
+      ['Year / Make / Model',[d.t_year,d.t_make,d.t_model].filter(Boolean).join(' ')||null],
+      ['Mileage',d.t_miles],
+      ['Condition',gv('trade_cond')],
+      ['Current Payment',d.t_payment?'$'+d.t_payment:null],
+      ['Lienholder / Payoff',d.t_payoff?'$'+d.t_payoff:null],
+    ]);
+
+    section('Credit Information',[
+      ['Score Estimate',gv('credit_grade')],
+      ['Do Business Now',gv('do_business')],
+    ]);
+
+    // Salesperson notes box
+    const spWrapped=me.wrap(spNotes,CW-24,11);
+    const spH=14+13+spWrapped.length*13+18;
+    need(spH+10);
+    rect(ML,y-spH+8,CW,spH,REDLT);
+    rect(ML,y-spH+8,4,spH,RED);
+    txt(ML+12,y-2,'SALESPERSON NOTES','F2',7.5,RED);
+    txt(ML+12,y-13,`Written by: ${spName}`,'F1',8,MUTED);
+    spWrapped.forEach((line,i)=>txt(ML+12,y-24-i*13,line,'F1',11,INK));
+    y-=spH+10;
+
+    // Signature line
+    need(50);
+    hline(ML,y,ML+180,1,INK);
+    txt(ML,y-10,'X  Guest Signature','F1',8,MUTED);
+    txtR(PW-MR,y,'Date:  _______________','F1',8,MUTED);
+    y-=28;
+
+    // Tagline
+    need(30);
+    txtC(PW/2,y,'IF ALL TERMS ARE AGREEABLE, WE CAN EARN YOUR BUSINESS NOW.','F2',9,INK);
+    y-=20;
+
+    hline(ML,y,PW-MR,0.5,RULE);
+    y-=10;
+    const ft=`Confidential \u2014 Towbin Kia, Henderson NV \u00B7 Generated ${dateStr}`;
+    txtC(PW/2,y,ft,'F1',7,MUTED);
+
+    pages.push([...ops]);
+    return this._buildPDF(pages);
+  },
+
+  _buildPDF(pages){
+    const enc=s=>[...s].map(c=>c.charCodeAt(0));
+    const chunks=[];const offsets={};
+    function emit(s){chunks.push(enc(s));}
+    function bytes(){return chunks.reduce((a,b)=>a+b.length,0);}
+    const nP=pages.length;
+    const pageObjs=Array.from({length:nP},(_,i)=>5+i*2+1);
+    emit('%PDF-1.4\n%\xFF\xFF\xFF\xFF\n');
+    offsets[1]=bytes();emit(`1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n`);
+    offsets[2]=bytes();emit(`2 0 obj\n<< /Type /Pages /Kids [${pageObjs.map(n=>`${n} 0 R`).join(' ')}] /Count ${nP} >>\nendobj\n`);
+    offsets[3]=bytes();emit(`3 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\nendobj\n`);
+    offsets[4]=bytes();emit(`4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\nendobj\n`);
+    for(let i=0;i<nP;i++){
+      const cObj=5+i*2, pObj=5+i*2+1;
+      const stream=pages[i].join('\n')+'\n';
+      offsets[cObj]=bytes();emit(`${cObj} 0 obj\n<< /Length ${stream.length} >>\nstream\n${stream}endstream\nendobj\n`);
+      offsets[pObj]=bytes();emit(`${pObj} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${this.PW} ${this.PH}] /Contents ${cObj} 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>\nendobj\n`);
+    }
+    const xOff=bytes();const total=4+nP*2;
+    emit(`xref\n0 ${total+1}\n`);emit(`0000000000 65535 f \n`);
+    for(let i=1;i<=total;i++)emit(`${String(offsets[i]||0).padStart(10,'0')} 00000 n \n`);
+    emit(`trailer\n<< /Size ${total+1} /Root 1 0 R >>\nstartxref\n${xOff}\n%%EOF\n`);
+    return new Uint8Array(chunks.flat());
+  }
+};
+
+/* ══ FORM LOGIC ══ */
+const TOTAL=4;
+let current=1;
+const fd={};
+const pillData={};
+
+function startForm(){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('form-screen').style.display='block';
+}
+
+function updateProgress(){
+  document.getElementById('step-num').textContent=current;
+  document.getElementById('progress-fill').style.width=(current/TOTAL*100)+'%';
+  document.getElementById('btn-back').style.display=current>1?'block':'none';
+  const nb=document.getElementById('btn-next');
+  nb.textContent=current===TOTAL?'✓  Submit':'Continue →';
+  nb.className='btn '+(current===TOTAL?'btn-submit':'btn-next');
+}
+
+function showStep(n){
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+  const p=document.getElementById('step-'+n);
+  if(p)p.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  updateProgress();
+}
+
+function v(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+
+function collect(){
+  if(current===1){fd.fname=v('fname');fd.lname=v('lname');fd.address=v('address');fd.home_phone=v('home-phone');fd.cell_phone=v('cell-phone');fd.email=v('email');}
+  if(current===2){fd.veh_year=v('veh-year');fd.veh_make=v('veh-make');fd.veh_model=v('veh-model');fd.stock_num=v('stock-num');fd.veh_color=v('veh-color');fd.down=v('down');fd.monthly=v('monthly');fd.needs=v('needs');}
+  if(current===3){fd.t_year=v('t-year');fd.t_make=v('t-make');fd.t_model=v('t-model');fd.t_miles=v('t-miles');fd.t_payment=v('t-payment');fd.t_payoff=v('t-payoff');}
+  // always merge pill selections
+  Object.assign(fd, pillData);
+}
+
+function nextStep(){collect();if(current<TOTAL){current++;showStep(current);}else submitForm();}
+function prevStep(){if(current>1){current--;showStep(current);}}
+
+function submitForm(){
+  collect();
+  // Hide form UI, show success
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('topbar').style.display='none';
+  document.getElementById('bottom-nav').style.display='none';
+  document.getElementById('success-screen').classList.add('show');
+  buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildSummary(){
+  const d=fd;
+  const secs=[
+    {t:'Contact',rows:[['Name',[d.fname,d.lname].filter(Boolean).join(' ')],['Phone',d.cell_phone||d.home_phone],['Email',d.email],['Source',d.source?.join(', ')]]},
+    {t:'Vehicle of Interest',rows:[['New/Used',d.new_used?.[0]],['Vehicle',[d.veh_year,d.veh_make,d.veh_model].filter(Boolean).join(' ')],['Stock #',d.stock_num],['Down',d.down?'$'+d.down:null],['Monthly',d.monthly?'$'+d.monthly:null],['Needs/Wants',d.needs]]},
+    {t:'Trade-In',rows:[['Has Trade',d.has_trade?.[0]],['Trade Vehicle',[d.t_year,d.t_make,d.t_model].filter(Boolean).join(' ')],['Payment',d.t_payment?'$'+d.t_payment:null],['Payoff',d.t_payoff?'$'+d.t_payoff:null]]},
+    {t:'Credit',rows:[['Score',d.credit_grade?.[0]],['Do Business Now',d.do_business?.[0]]]},
+  ];
+  let html='';
+  secs.forEach(s=>{
+    const valid=s.rows.filter(([,v])=>v);
+    if(!valid.length)return;
+    html+=`<div class="sum-sec">${s.t}</div>`;
+    valid.forEach(([l,v])=>{html+=`<div class="sum-row"><span class="s-label">${l}</span><span class="s-val">${v}</span></div>`;});
+  });
+  document.getElementById('summary-card').innerHTML=html;
+}
+
+function savePDF(){
+  const btn=document.getElementById('pdf-btn');
+  const status=document.getElementById('pdf-status');
+  btn.classList.add('loading');btn.textContent='⏳  Building PDF…';status.textContent='';
+  setTimeout(()=>{
+    try{
+      // Read salesperson fields now that success screen is visible
+      const payload={
+        ...fd,
+        ...pillData,
+        sp_name: document.getElementById('sp-name').value.trim(),
+        sp_notes: document.getElementById('sp-notes').value.trim(),
+      };
+      const pdfBytes=PDF.generate(payload);
+      const blob=new Blob([pdfBytes],{type:'application/pdf'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      const name=[fd.fname,fd.lname].filter(Boolean).join('_')||'Guest';
+      const date=new Date().toISOString().slice(0,10);
+      a.href=url;a.download=`TowbinKia_GuestSheet_${name}_${date}.pdf`;
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      setTimeout(()=>URL.revokeObjectURL(url),5000);
+      btn.classList.remove('loading');btn.textContent='✓  PDF Saved!';
+      status.textContent='Check your Downloads or Files app.';
+      setTimeout(()=>{btn.textContent='📄  Save Guest Sheet as PDF';status.textContent='';},5000);
+    }catch(e){
+      btn.classList.remove('loading');btn.textContent='📄  Save Guest Sheet as PDF';
+      status.textContent='⚠  Something went wrong. Please try again.';console.error(e);
+    }
+  },60);
+}
+
+/* ══ PILL LOGIC ══ */
+document.querySelectorAll('.pill-btn[data-group]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const group=btn.dataset.group;
+    const isSingle=btn.dataset.single==='true';
+    if(isSingle){
+      document.querySelectorAll(`.pill-btn[data-group="${group}"]`).forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      if(group==='has_trade'){
+        const tf=document.getElementById('trade-fields');
+        btn.dataset.val==='Yes'?tf.classList.add('show'):tf.classList.remove('show');
+      }
+    }else{btn.classList.toggle('selected');}
+    pillData[group]=[...document.querySelectorAll(`.pill-btn[data-group="${group}"].selected`)].map(b=>b.dataset.val);
+  });
+});
+
+/* Credit scale */
+document.querySelectorAll('.credit-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.credit-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    pillData.credit_grade=[btn.dataset.val];
+  });
+});
+
+updateProgress();
+</script>
+</body>
+</html>
